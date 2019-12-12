@@ -126,6 +126,7 @@ type
 
 {$IFDEF DELPHIXE2_OR_HIGHER}
   {$DEFINE USESYSTEMDISPINVOKE}  //Delphi 2010 DispInvoke is buggy
+  {$DEFINE PATCHEDSYSTEMDISPINVOKE}  //To correct memory leaks
 {$ENDIF}
 {.$IF DEFINED(FPC_FULLVERSION) and (FPC_FULLVERSION >= 20500)}
   {.$DEFINE USESYSTEMDISPINVOKE}
@@ -944,17 +945,40 @@ procedure TPythonVariantType.DispInvoke(Dest: PVarData;
    {$IF FPC_FULLVERSION >= 30000}var{$ELSE}const{$ENDIF}Source: TVarData; CallDesc: PCallDesc; Params: Pointer);
 {$ENDIF}
 {$IFDEF USESYSTEMDISPINVOKE}
-{$IFDEF DELPHIXE2_OR_HIGHER}
-  //  Modified to correct memory leak QC102387
+{$IFDEF PATCHEDSYSTEMDISPINVOKE}
+  //  Modified to correct memory leak QC102387 / RSP-23093
+  procedure PatchedFinalizeDispatchInvokeArgs(CallDesc: PCallDesc; const Args: TVarDataArray; OrderLTR : Boolean);
+  const
+    atByRef    = $80;
+  var
+    I: Integer;
+    ArgType: Byte;
+    PVarParm: PVarData;
+    VType: TVarType;
+  begin
+    for I := 0 to CallDesc^.ArgCount-1 do
+    begin
+      ArgType := CallDesc^.ArgTypes[I];
+
+      if OrderLTR then
+        PVarParm := @Args[I]
+      else
+        PVarParm := @Args[CallDesc^.ArgCount-I-1];
+
+      VType := PVarParm.VType;
+
+      // Only ByVal Variant or Array parameters have been copied and need to be released
+      // Strings have been released via the use of the TStringRefList parameter to GetDispatchInvokeArgs
+      // !!Modified to prevent memory leaks!! RSP-23093
+      if ((ArgType and atByRef) <> atByRef) and ((ArgType = varVariant) or ((VType and varArray) = varArray)) then
+        VarClear(PVariant(PVarParm)^);
+    end;
+  end;
+
   procedure PatchedDispInvoke(Dest: PVarData;
     const Source: TVarData; CallDesc: PCallDesc; Params: Pointer);
   type
-    PParamRec = ^TParamRec;
-    TParamRec = array[0..3] of LongInt;
-    TStringDesc = record
-      BStr: WideString;
-      PStr: PAnsiString;
-    end;
+    PStringRefList = ^TStringRefList;
   const
     CDoMethod    = $01;
     CPropertyGet = $02;
@@ -964,67 +988,75 @@ procedure TPythonVariantType.DispInvoke(Dest: PVarData;
     LIdent: string;
     LTemp: TVarData;
     VarParams : TVarDataArray;
-    Strings: TStringRefList;
+    Strings: array of TStringRef;
+    PIdent: PByte;
   begin
     // Grab the identifier
     LArgCount := CallDesc^.ArgCount;
-    LIdent := FixupIdent(AnsiString(PAnsiChar(@CallDesc^.ArgTypes[LArgCount])));
-
-    FillChar(Strings, SizeOf(Strings), 0);
-    VarParams := GetDispatchInvokeArgs(CallDesc, Params, Strings, true);
-
-    // What type of invoke is this?
-    case CallDesc^.CallType of
-      CDoMethod:
-        // procedure with N arguments
-        if Dest = nil then
-        begin
-          if not DoProcedure(Source, LIdent, VarParams) then
+    PIdent := @CallDesc^.ArgTypes[LArgCount];
+    LIdent := FixupIdent( UTF8ToString(MarshaledAString(PIdent)) );
+    if LArgCount > 0 then begin
+      SetLength(Strings, LArgCount);
+      FillChar(Strings[0], SizeOf(TStringRef)*LArgCount, 0);
+      VarParams := GetDispatchInvokeArgs(CallDesc, Params, PStringRefList(Strings)^, true);
+    end;
+    try
+      // What type of invoke is this?
+      case CallDesc^.CallType of
+        CDoMethod:
+          // procedure with N arguments
+          if Dest = nil then
           begin
+            if not DoProcedure(Source, LIdent, VarParams) then
+            begin
 
-            // ok maybe its a function but first we must make room for a result
-            VarDataInit(LTemp);
-            try
+              // ok maybe its a function but first we must make room for a result
+              VarDataInit(LTemp);
+              try
 
-              // notate that the destination shouldn't be bothered with
-              // functions can still return stuff, we just do this so they
-              //  can tell that they don't need to if they don't want to
-              SetClearVarToEmptyParam(LTemp);
+                // notate that the destination shouldn't be bothered with
+                // functions can still return stuff, we just do this so they
+                //  can tell that they don't need to if they don't want to
+                SetClearVarToEmptyParam(LTemp);
 
-              // ok lets try for that function
-              if not DoFunction(LTemp, Source, LIdent, VarParams) then
-                RaiseDispError;
-            finally
-              VarDataClear(LTemp);
-            end;
+                // ok lets try for that function
+                if not DoFunction(LTemp, Source, LIdent, VarParams) then
+                  RaiseDispError;
+              finally
+                VarDataClear(LTemp);
+              end;
+            end
           end
-        end
 
-        // property get or function with 0 argument
-        else if LArgCount = 0 then
-        begin
-          if not GetProperty(Dest^, Source, LIdent) and
-             not DoFunction(Dest^, Source, LIdent, VarParams) then
+          // property get or function with 0 argument
+          else if LArgCount = 0 then
+          begin
+            if not GetProperty(Dest^, Source, LIdent) and
+               not DoFunction(Dest^, Source, LIdent, VarParams) then
+              RaiseDispError;
+          end
+
+          // function with N arguments
+          else if not DoFunction(Dest^, Source, LIdent, VarParams) then
             RaiseDispError;
-        end
 
-        // function with N arguments
-        else if not DoFunction(Dest^, Source, LIdent, VarParams) then
-          RaiseDispError;
+        CPropertyGet:
+          if not ((Dest <> nil) and                         // there must be a dest
+                  (LArgCount = 0) and                       // only no args
+                  GetProperty(Dest^, Source, LIdent)) then  // get op be valid
+            RaiseDispError;
 
-      CPropertyGet:
-        if not ((Dest <> nil) and                         // there must be a dest
-                (LArgCount = 0) and                       // only no args
-                GetProperty(Dest^, Source, LIdent)) then  // get op be valid
-          RaiseDispError;
+        CPropertySet:
+          if not ((Dest = nil) and                          // there can't be a dest
+                  (LArgCount = 1) and                       // can only be one arg
+                  SetProperty(Source, LIdent, VarParams[0])) then // set op be valid
+            RaiseDispError;
+      else
+        RaiseDispError;
+      end;
 
-      CPropertySet:
-        if not ((Dest = nil) and                          // there can't be a dest
-                (LArgCount = 1) and                       // can only be one arg
-                SetProperty(Source, LIdent, VarParams[0])) then // set op be valid
-          RaiseDispError;
-    else
-      RaiseDispError;
+    finally
+      PatchedFinalizeDispatchInvokeArgs(CallDesc, VarParams, true);
     end;
 
     for I := 0 to Length(Strings) - 1 do
@@ -1033,13 +1065,12 @@ procedure TPythonVariantType.DispInvoke(Dest: PVarData;
         Break;
       if Strings[I].Ansi <> nil then
         Strings[I].Ansi^ := AnsiString(Strings[I].Wide)
-      else if Strings[I].Unicode <> nil then
-        Strings[I].Unicode^ := UnicodeString(Strings[I].Wide)
+      else
+        if Strings[I].Unicode <> nil then
+          Strings[I].Unicode^ := UnicodeString(Strings[I].Wide)
     end;
-    for I := Low(VarParams) to High(VarParams) do
-      VarDataClear(VarParams[I]);
   end;
-{$ENDIF DELPHIXE2_OR_HIGHER}
+{$ENDIF PATCHEDSYSTEMDISPINVOKE}
 
   procedure GetNamedParams;
   var
@@ -1052,7 +1083,7 @@ procedure TPythonVariantType.DispInvoke(Dest: PVarData;
     SetLength(fNamedParams, CallDesc^.NamedArgCount);
     // Skip function Name
     for I := 0 to CallDesc^.NamedArgCount - 1 do begin
-      LNamePtr := LNamePtr + Succ(StrLen(LNamePtr));
+      LNamePtr := LNamePtr + Succ(Length(LNamePtr));
       fNamedParams[I].Index := I+LNamedArgStart;
       fNamedParams[I].Name  := AnsiString(LNamePtr);
     end;
@@ -1066,17 +1097,17 @@ begin
     if (CallDesc^.CallType = CPropertyGet) and (CallDesc^.ArgCount = 1) then begin
       NewCallDesc := CallDesc^;
       NewCallDesc.CallType := CDoMethod;
-    {$IFDEF DELPHIXE2_OR_HIGHER}
+    {$IFDEF PATCHEDSYSTEMDISPINVOKE}
       PatchedDispInvoke(Dest, Source, @NewCallDesc, Params);
-    {$ELSE DELPHIXE2_OR_HIGHER}
+    {$ELSE PATCHEDSYSTEMDISPINVOKE}
       inherited DispInvoke(Dest, Source, @NewCallDesc, Params);
-    {$ENDIF DELPHIXE2_OR_HIGHER}
+    {$ENDIF PATCHEDSYSTEMDISPINVOKE}
     end else
-      {$IFDEF DELPHIXE2_OR_HIGHER}
+      {$IFDEF PATCHEDSYSTEMDISPINVOKE}
       PatchedDispInvoke(Dest, Source, CallDesc, Params);
-      {$ELSE DELPHIXE2_OR_HIGHER}
+      {$ELSE PATCHEDSYSTEMDISPINVOKE}
       inherited;
-      {$ENDIF DELPHIXE2_OR_HIGHER}
+      {$ENDIF PATCHEDSYSTEMDISPINVOKE}
   finally
     if CallDesc^.NamedArgCount > 0 then SetLength(fNamedParams, 0);
   end;
@@ -1430,7 +1461,6 @@ function TPythonVariantType.EvalPython(const V: TVarData;
     _key, _value : PPyObject;
     _result : Integer;
   begin
-    Result := nil;
     with GetPythonEngine do
     begin
       PyErr_Clear;
@@ -1441,21 +1471,21 @@ function TPythonVariantType.EvalPython(const V: TVarData;
         _value := VarDataToPythonObject(AValue);
         if not Assigned(_value) then
           raise Exception.Create(SCantConvertValueToPythonObject);
-          if PyList_Check(AObject) then
-            _result := PyList_SetItem( AObject, Variant(AKey), _value )
-          else if PyTuple_Check(AObject) then
-            _result := PyTuple_SetItem( AObject, Variant(AKey), _value )
-          else
-            try
-              if PySequence_Check(AObject) <> 0 then
-                _result := PySequence_SetItem(AObject, Variant(AKey), _value)
-              else
-                _result := PyObject_SetItem( AObject, _key, _value );
-            finally
-              Py_XDecRef(_value);
-            end; // of try
-          CheckError;
-          Result := PyInt_FromLong(_result);
+        if PyList_Check(AObject) then
+          _result := PyList_SetItem( AObject, Variant(AKey), _value )
+        else if PyTuple_Check(AObject) then
+          _result := PyTuple_SetItem( AObject, Variant(AKey), _value )
+        else
+          try
+            if PySequence_Check(AObject) <> 0 then
+              _result := PySequence_SetItem(AObject, Variant(AKey), _value)
+            else
+              _result := PyObject_SetItem( AObject, _key, _value );
+          finally
+            Py_XDecRef(_value);
+          end; // of try
+        CheckError;
+        Result := PyInt_FromLong(_result);
       finally
         Py_XDecRef(_key);
       end; // of try

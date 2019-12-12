@@ -121,8 +121,6 @@ type
   PNativeInt = ^NativeInt;
 {$ENDIF}
 
-
-
   TPythonVersionProp = packed record
     DllName      : String;
     RegVersion   : String;
@@ -131,75 +129,79 @@ type
   end;
 const
 {$IFDEF MSWINDOWS}
-  PYTHON_KNOWN_VERSIONS: array[1..13] of TPythonVersionProp =
-  ( (DllName: 'python23.dll'; RegVersion: '2.3'; APIVersion: 1012; CanUseLatest: True),
-    (DllName: 'python24.dll'; RegVersion: '2.4'; APIVersion: 1012; CanUseLatest: True),
+  PYTHON_KNOWN_VERSIONS: array[1..10] of TPythonVersionProp =
+    (
     (DllName: 'python25.dll'; RegVersion: '2.5'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python26.dll'; RegVersion: '2.6'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python27.dll'; RegVersion: '2.7'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'python30.dll'; RegVersion: '3.0'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'python31.dll'; RegVersion: '3.1'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python32.dll'; RegVersion: '3.2'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python33.dll'; RegVersion: '3.3'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python34.dll'; RegVersion: '3.4'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python35.dll'; RegVersion: '3.5'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'python36.dll'; RegVersion: '3.6'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'python37.dll'; RegVersion: '3.7'; APIVersion: 1013; CanUseLatest: True) );
+    (DllName: 'python37.dll'; RegVersion: '3.7'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'python38.dll'; RegVersion: '3.8'; APIVersion: 1013; CanUseLatest: True)
+    );
 {$ENDIF}
 {$IFDEF LINUX}
-  PYTHON_KNOWN_VERSIONS: array[1..13] of TPythonVersionProp =
-  ( (DllName: 'libpython2.3.so'; RegVersion: '2.3'; APIVersion: 1012; CanUseLatest: True),
-    (DllName: 'libpython2.4.so'; RegVersion: '2.4'; APIVersion: 1012; CanUseLatest: True),
+  PYTHON_KNOWN_VERSIONS: array[1..10] of TPythonVersionProp =
+    (
     (DllName: 'libpython2.5.so'; RegVersion: '2.5'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'libpython2.6.so'; RegVersion: '2.6'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'libpython2.7.so'; RegVersion: '2.7'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'libpython3.0.so'; RegVersion: '3.0'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'libpython3.1.so'; RegVersion: '3.1'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'libpython3.2.so'; RegVersion: '3.2'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'libpython3.3.so'; RegVersion: '3.3'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'libpython3.4.so'; RegVersion: '3.4'; APIVersion: 1013; CanUseLatest: True),
     (DllName: 'libpython3.5.so'; RegVersion: '3.5'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'libpython3.6.so'; RegVersion: '3.6'; APIVersion: 1013; CanUseLatest: True),
-    (DllName: 'libpython3.7.so'; RegVersion: '3.7'; APIVersion: 1013; CanUseLatest: True) );
+    (DllName: 'libpython3.6.so'; RegVersion: '3.6'; APIVersion: 1013; CanUseLatest: True)
+    (DllName: 'libpython3.7.so'; RegVersion: '3.7'; APIVersion: 1013; CanUseLatest: True)
+    (DllName: 'libpython3.8.so'; RegVersion: '3.8'; APIVersion: 1013; CanUseLatest: True)
+    );
 {$ENDIF}
-{$IFDEF PYTHON23}
+{$IFDEF DARWIN}
+  PYTHON_KNOWN_VERSIONS: array[1..10] of TPythonVersionProp =
+    (
+    (DllName: 'libpython2.5.dylib'; RegVersion: '2.5'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython2.6.dylib'; RegVersion: '2.6'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython2.7.dylib'; RegVersion: '2.7'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.2.dylib'; RegVersion: '3.2'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.3.dylib'; RegVersion: '3.3'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.4.dylib'; RegVersion: '3.4'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.5.dylib'; RegVersion: '3.5'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.6.dylib'; RegVersion: '3.6'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.7.dylib'; RegVersion: '3.7'; APIVersion: 1013; CanUseLatest: True),
+    (DllName: 'libpython3.8.dylib'; RegVersion: '3.8'; APIVersion: 1013; CanUseLatest: True)
+    );
+{$endif}
+{$IFDEF PYTHON25}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 1;
 {$ENDIF}
-{$IFDEF PYTHON24}
+{$IFDEF PYTHON26}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 2;
 {$ENDIF}
-{$IFDEF PYTHON25}
+{$IFDEF PYTHON27}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 3;
 {$ENDIF}
-{$IFDEF PYTHON26}
+{$IFDEF PYTHON32}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 4;
 {$ENDIF}
-{$IFDEF PYTHON27}
+{$IFDEF PYTHON33}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 5;
 {$ENDIF}
-{$IFDEF PYTHON30}
+{$IFDEF PYTHON34}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 6;
 {$ENDIF}
-{$IFDEF PYTHON31}
+{$IFDEF PYTHON35}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 7;
 {$ENDIF}
-{$IFDEF PYTHON32}
+{$IFDEF PYTHON36}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 8;
 {$ENDIF}
-{$IFDEF PYTHON33}
+{$IFDEF PYTHON37}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 9;
 {$ENDIF}
-{$IFDEF PYTHON34}
+{$IFDEF PYTHON38}
   COMPILED_FOR_PYTHON_VERSION_INDEX = 10;
-{$ENDIF}
-{$IFDEF PYTHON35}
-  COMPILED_FOR_PYTHON_VERSION_INDEX = 11;
-{$ENDIF}
-{$IFDEF PYTHON36}
-  COMPILED_FOR_PYTHON_VERSION_INDEX = 12;
-{$ENDIF}
-{$IFDEF PYTHON37}
-  COMPILED_FOR_PYTHON_VERSION_INDEX = 13;
 {$ENDIF}
   PYT_METHOD_BUFFER_INCREASE = 10;
   PYT_MEMBER_BUFFER_INCREASE = 10;
@@ -496,8 +498,6 @@ type
   getattrofunc      = function( ob1,ob2: PPyObject): PPyObject; cdecl;
   setattrofunc      = function( ob1,ob2,ob3: PPyObject): integer; cdecl;
 
-/// jah 29-sep-2000 : updated for python 2.0
-///                   added from object.h
   getreadbufferproc = function ( ob1: PPyObject; i: NativeInt; ptr: Pointer): NativeInt; cdecl;
   getwritebufferproc= function ( ob1: PPyObject; i: NativeInt; ptr: Pointer): NativeInt; cdecl;
   getsegcountproc   = function ( ob1: PPyObject; i: NativeInt): NativeInt; cdecl;
@@ -540,8 +540,7 @@ type
      nb_oct           : unaryfunc;
      nb_hex           : unaryfunc;
 
-/// jah 29-sep-2000 : updated for python 2.0
-///                   added from .h
+    // Updated for python 2.0
      nb_inplace_add       : binaryfunc;
      nb_inplace_subtract  : binaryfunc;
      nb_inplace_multiply  : binaryfunc;
@@ -571,9 +570,6 @@ type
      sq_slice     : ssizessizeargfunc;
      sq_ass_item  : ssizeobjargproc;
      sq_ass_slice : ssizessizeobjargproc;
-
-/// jah 29-sep-2000 : updated for python 2.0
-///                   added from .h
      sq_contains        : objobjproc;
      sq_inplace_concat  : binaryfunc;
      sq_inplace_repeat  : ssizeargfunc;
@@ -587,8 +583,6 @@ type
   end;
   PPyMappingMethods = ^PyMappingMethods;
 
-/// jah 29-sep-2000 : updated for python 2.0
-///                   added from .h
   PyBufferProcs = {$IFNDEF CPUX64}packed{$ENDIF} record
      bf_getreadbuffer   : getreadbufferproc;
      bf_getwritebuffer  : getwritebufferproc;
@@ -775,10 +769,10 @@ type
     // Methods to implement standard operations
 
     tp_dealloc:     pydestructor;
-    tp_print:       printfunc;
+    tp_print:       printfunc; // not available and replaced in Python 3.x
     tp_getattr:     getattrfunc;
     tp_setattr:     setattrfunc;
-    tp_compare:     cmpfunc;
+    tp_compare:     cmpfunc;  // not available and replaced in Python 3.x
     tp_repr:        reprfunc;
 
     // Method suites for standard classes
@@ -794,8 +788,6 @@ type
     tp_str:         reprfunc;
     tp_getattro:    getattrofunc;
     tp_setattro:    setattrofunc;
-
-/// jah 29-sep-2000 : updated for python 2.0
 
     // Functions to access object as input/output buffer
     tp_as_buffer:   PPyBufferProcs;
@@ -936,42 +928,78 @@ type
     next           : PPyInterpreterState;
     tstate_head    : PPyThreadState;
 
-    modules        : PPyObject;
-    sysdict        : PPyObject;
-    builtins       : PPyObject;
+//  The strucure has changed between versions beyond this point.
+//  Not safe to use members
+//    modules        : PPyObject;
+//    sysdict        : PPyObject;
+//    builtins       : PPyObject;
 
-    checkinterval  : integer;
+    //Spares
+    is_xxx1             : NativeInt;
+    is_xxx2             : NativeInt;
+    is_xxx3             : NativeInt;
+    is_xxx4             : NativeInt;
+    is_xxx5             : NativeInt;
+    is_xxx6             : NativeInt;
+    is_xxx7             : NativeInt;
+    is_xxx8             : NativeInt;
+    is_xxx9             : NativeInt;
   end;
 
   // Thread specific information
   PyThreadState = {$IFNDEF CPUX64}packed{$ENDIF} record
+    {prev          : PPyThreadState; introduced in python 3.4}
     next           : PPyThreadState;
     interp         : PPyInterpreterState;
+    interp34       : PPyInterpreterState;
 
-    frame          : PPyFrameObject;
-    recursion_depth: integer;
-    ticker         : integer;
-    tracing        : integer;
-
-    sys_profilefn  : Pointer;           // c-functions for profile/trace
-    sys_tracefn    : Pointer;
-    sys_profilefunc: PPyObject;
-    sys_tracefunc  : PPyObject;
-
-    curexc_type    : PPyObject;
-    curexc_value   : PPyObject;
-    curexc_traceback: PPyObject;
-
-    exc_type       : PPyObject;
-    exc_value      : PPyObject;
-    exc_traceback  : PPyObject;
-
-    dict           : PPyObject;
-    tick_counter      :Integer;
-    gilstate_counter  :Integer;
-
-    async_exc         :PPyObject; { Asynchronous exception to raise }
-    thread_id         :LongInt;   { Thread id where this tstate was created }
+//  The strucure has changed between versions beyond this point.
+//  Not safe to use members
+//
+//    frame          : PPyFrameObject;
+//    recursion_depth: integer;
+//    ticker         : integer;
+//    tracing        : integer;
+//
+//    sys_profilefn  : Pointer;           // c-functions for profile/trace
+//    sys_tracefn    : Pointer;
+//    sys_profilefunc: PPyObject;
+//    sys_tracefunc  : PPyObject;
+//
+//    curexc_type    : PPyObject;
+//    curexc_value   : PPyObject;
+//    curexc_traceback: PPyObject;
+//
+//    exc_type       : PPyObject;
+//    exc_value      : PPyObject;
+//    exc_traceback  : PPyObject;
+//
+//    dict           : PPyObject;
+//    tick_counter      :Integer;
+//    gilstate_counter  :Integer;
+//
+//    async_exc         :PPyObject; { Asynchronous exception to raise }
+//    thread_id         :LongInt;   { Thread id where this tstate was created }
+    //Spares
+    ts_xxx1             : NativeInt;
+    ts_xxx2             : NativeInt;
+    ts_xxx3             : NativeInt;
+    ts_xxx4             : NativeInt;
+    ts_xxx5             : NativeInt;
+    ts_xxx6             : NativeInt;
+    ts_xxx7             : NativeInt;
+    ts_xxx8             : NativeInt;
+    ts_xxx9             : NativeInt;
+    ts_xxx10            : NativeInt;
+    ts_xxx11            : NativeInt;
+    ts_xxx12            : NativeInt;
+    ts_xxx13            : NativeInt;
+    ts_xxx14            : NativeInt;
+    ts_xxx15            : NativeInt;
+    ts_xxx16            : NativeInt;
+    ts_xxx17            : NativeInt;
+    ts_xxx18            : NativeInt;
+    ts_xxx19            : NativeInt;
 
     { XXX signal handlers should also be here }
   end;
@@ -1035,6 +1063,11 @@ type
     n_col_offset: integer;
     n_nchildren : integer;
     n_child     : PNode;
+  end;
+
+  PPyCompilerFlags = ^PyCompilerFlags;
+  PyCompilerFlags = {$IFNDEF CPUX64}packed{$ENDIF} record
+    flags : integer;
   end;
 
   // From weakrefobject.h
@@ -1253,9 +1286,6 @@ type
 
 
   // Standard exception classes of Python
-
-/// jah 29-sep-2000 : updated for python 2.0
-///                   base classes updated according python documentation
 
 { Hierarchy of Python exceptions, Python 2.3, copied from <INSTALL>\Python\exceptions.c
 
@@ -1728,13 +1758,14 @@ type
     PyDict_GetItemString: function( dp: PPyObject; key: PAnsiChar): PPyObject; cdecl;
     PyDict_SetItemString: function( dp: PPyObject; key: PAnsiChar; item: PPyObject):
                           Integer; cdecl;
-    PyDictProxy_New: function (obj : PPyObject) : PPyObject; cdecl;
+    PyDictProxy_New:      function (obj : PPyObject) : PPyObject; cdecl;
     PyModule_GetDict:     function( module:PPyObject): PPyObject; cdecl;
     PyObject_Str:         function( v: PPyObject): PPyObject; cdecl;
     PyRun_String:         function( str: PAnsiChar; start: Integer; globals: PPyObject;
                                     locals: PPyObject): PPyObject; cdecl;
     PyRun_SimpleString:   function( str: PAnsiChar): Integer; cdecl;
     PyString_AsString:    function( ob: PPyObject): PAnsiChar; cdecl;
+    PyString_AsStringAndSize: function( ob: PPyObject; var buffer: PAnsiChar; var size: NativeInt): integer; cdecl;
     PySys_SetArgv:        procedure( argc: Integer; argv: PPAnsiChar); cdecl;
     PySys_SetArgv3000:    procedure( argc: Integer; argv: PPWideChar); cdecl;
 
@@ -1835,7 +1866,6 @@ type
     PyOS_InterruptOccurred:function :integer; cdecl;
     PyObject_CallObject:function (ob,args:PPyObject):PPyObject; cdecl;
     PyObject_CallMethod : function ( obj : PPyObject; method, format : PAnsiChar {...}) : PPyObject; cdecl varargs;
-    PyObject_CallMethodStr: function ( obj : PPyObject; method, format, value : PAnsiChar ) : PPyObject; cdecl;
     PyObject_Compare: function (ob1,ob2:PPyObject):integer; cdecl;
     PyObject_RichCompare:function (ob1,ob2:PPyObject;opid:integer):PPyObject; cdecl;
     PyObject_RichCompareBool:function (ob1,ob2:PPyObject;opid:integer):Integer; cdecl;
@@ -1926,7 +1956,8 @@ type
     PyThreadState_SetAsyncExc: function(t_id :LongInt; exc :PPyObject) : Integer; cdecl;
     Py_AtExit:function (proc: AtExitProc):integer; cdecl;
     //Py_Cleanup:procedure; cdecl;
-    Py_CompileString:function (s1,s2:PAnsiChar;i:integer):PPyObject; cdecl;
+    Py_CompileStringFlags:function (s1,s2:PAnsiChar;i:integer;flags:PPyCompilerFlags):PPyObject; cdecl;
+    Py_CompileStringExFlags:function (s1,s2:PAnsiChar;i:integer;flags:PPyCompilerFlags;optimize:integer):PPyObject; cdecl;
     Py_FatalError:procedure(s:PAnsiChar); cdecl;
     Py_FindMethod:function (md:PPyMethodDef;ob:PPyObject;key:PAnsiChar):PPyObject; cdecl;
     Py_FindMethodInChain:function (mc:PPyMethodChain;ob:PPyObject;key:PAnsiChar):PPyObject; cdecl;
@@ -1940,13 +1971,16 @@ type
     Py_GetCopyright                 : function : PAnsiChar; cdecl;
     Py_GetExecPrefix                : function : PAnsiChar; cdecl;
     Py_GetPath                      : function : PAnsiChar; cdecl;
+    Py_SetPythonHome                : procedure (home : PAnsiChar); cdecl;
+    Py_GetPythonHome                : function : PAnsiChar; cdecl;
+    Py_SetPythonHome3000            : procedure (home : PWideChar); cdecl;
+    Py_GetPythonHome3000            : function : PWideChar; cdecl;
     Py_GetPrefix                    : function : PAnsiChar; cdecl;
     Py_GetProgramName               : function : PAnsiChar; cdecl;
 
-    PyParser_SimpleParseString      : function ( str : PAnsiChar; start : Integer) : PNode; cdecl;
+    PyParser_SimpleParseStringFlags : function ( str : PAnsiChar; start, flags : Integer) : PNode; cdecl;
     PyNode_Free                     : procedure( n : PNode ); cdecl;
     PyErr_NewException              : function ( name : PAnsiChar; base, dict : PPyObject ) : PPyObject; cdecl;
-    Py_Malloc                       : function ( size : NativeInt ) : Pointer;
     PyMem_Malloc                    : function ( size : NativeInt ) : Pointer;
 
 {New exported Objects in Python 1.5}
@@ -2034,13 +2068,16 @@ type
     _Py_c_quot: Pointer;
     _Py_c_sum: Pointer;
 }
+  // Not exported in Python 3.8 and implemented as functions
+  function PyParser_SimpleParseString( str : PAnsiChar; start : Integer) : PNode; cdecl;
+  function Py_CompileString( s1,s2:PAnsiChar;i:integer) : PPyObject; cdecl;
+
   // functions redefined in Delphi
   procedure   Py_INCREF   ( op: PPyObject);
   procedure   Py_DECREF   ( op: PPyObject);
   procedure   Py_XINCREF  ( op: PPyObject);
   procedure   Py_XDECREF  ( op: PPyObject);
 
-  function Py_GetPlatform: PAnsiChar; cdecl;
   function PyCode_Addr2Line( co: PPyCodeObject; addrq : Integer ) : Integer; cdecl;
   function Py_GetBuildInfo: PAnsiChar; cdecl;
   function PyImport_ExecCodeModule( const AName : AnsiString; codeobject : PPyObject) : PPyObject;
@@ -2081,7 +2118,6 @@ type
   function Py_InitModule( const AName : PAnsiChar; md : PPyMethodDef) : PPyObject;
   function Py_InitModule3000( const md : PyModuleDef) : PPyObject;
   function PyString_FromString( str: PAnsiChar): PPyObject; virtual; abstract;
-  function PyString_AsDelphiString( ob: PPyObject): string;  virtual; abstract;
   procedure Py_FlushLine; cdecl;
 
   // Constructors & Destructors
@@ -2150,6 +2186,7 @@ type
   {$IFEND}
   TPythonEngine = class(TPythonInterface)
   private
+    FVenvPythonExe:              string;
     FInitScript:                 TStrings;
     FIO:                         TPythonInputOutput;
     FRedirectIO:                 Boolean;
@@ -2160,6 +2197,8 @@ type
     FAutoFinalize:               Boolean;
     FProgramName:                AnsiString;
     FProgramNameW:               UnicodeString;
+    FPythonHome:                 AnsiString;
+    FPythonHomeW:                UnicodeString;
     FInitThreads:                Boolean;
     FOnPathInitialization:       TPathInitializationEvent;
     FOnSysPathInit:              TSysPathInitEvent;
@@ -2179,8 +2218,6 @@ type
     FPyDateTime_TZInfoType:      PPyObject;
     FPyDateTime_TimeTZType:      PPyObject;
     FPyDateTime_DateTimeTZType:  PPyObject;
-    function  GetVersion: String;
-    procedure SetVersion(const Value: String);
 
   protected
     procedure AfterLoad; override;
@@ -2213,12 +2250,15 @@ type
     procedure  Finalize;
     procedure  Lock;
     procedure  Unlock;
+    procedure  SetPythonHome(const PythonHome: string);
+    procedure  SetProgramName(const ProgramName: string);
     function   IsType(ob: PPyObject; obt: PPyTypeObject): Boolean;
     function   GetAttrString(obj: PPyObject; AName: PAnsiChar):PAnsiChar;
-    function   CleanString(const s : AnsiString) : AnsiString;
     function   Run_CommandAsString(const command : AnsiString; mode : Integer) : String;
     function   Run_CommandAsObject(const command : AnsiString; mode : Integer) : PPyObject;
     function   Run_CommandAsObjectWithDict(const command : AnsiString; mode : Integer; locals, globals : PPyObject) : PPyObject;
+    function   EncodeString (const str: string): AnsiString;
+    function   EncodeWindowsFilePath (const str: string): AnsiString;
     procedure  ExecString(const command : AnsiString); overload;
     procedure  ExecStrings( strings : TStrings ); overload;
     function   EvalString(const command : AnsiString) : PPyObject; overload;
@@ -2279,7 +2319,8 @@ type
     function   PyTZInfo_CheckExact( obj : PPyObject ) : Boolean;
     { end date/time functions }
     function PyString_FromString( str: PAnsiChar): PPyObject; override;
-    function PyString_AsDelphiString( ob: PPyObject): string; override;
+    function PyString_FromDelphiString(str : string): PPyObject;
+    function PyString_AsDelphiString( ob: PPyObject): string;
     function PyString_AsAnsiString( ob: PPyObject): AnsiString;
     function PyString_AsWideString( ob: PPyObject): UnicodeString;
 
@@ -2295,6 +2336,7 @@ type
     property IOPythonModule: TObject read FIOPythonModule; {TPythonModule}
   published
     property AutoFinalize: Boolean read FAutoFinalize write FAutoFinalize default True;
+    property VenvPythonExe: string read FVenvPythonExe write FVenvPythonExe;
     property DatetimeConversionMode: TDatetimeConversionMode read FDatetimeConversionMode write FDatetimeConversionMode default DEFAULT_DATETIME_CONVERSION_MODE;
     property InitScript: TStrings read FInitScript write SetInitScript;
     property InitThreads: Boolean read FInitThreads write SetInitThreads default False;
@@ -2302,7 +2344,6 @@ type
     property PyFlags: TPythonFlags read FPyFlags write SetPyFlags default [];
     property RedirectIO: Boolean read FRedirectIO write FRedirectIO default True;
     property UseWindowsConsole: Boolean read FUseWindowsConsole write FUseWindowsConsole default False;
-    property Version : String read GetVersion write SetVersion stored False;
     property OnAfterInit: TNotifyEvent read FOnAfterInit write FOnAfterInit;
     property OnPathInitialization: TPathInitializationEvent read FOnPathInitialization write FOnPathInitialization;
     property OnSysPathInit: TSysPathInitEvent read FOnSysPathInit write FOnSysPathInit;
@@ -3057,9 +3098,8 @@ type
 {$HINTS OFF}
   TPythonThread = class(TThread)
   private
-    f_savethreadstate: PPyThreadState;
-    fInterpreterState: PPyInterpreterState;
     fThreadState:      PPyThreadState;
+    f_savethreadstate: PPyThreadState;
     fThreadExecMode:   TThreadExecMode;
 
 // Do not overwrite Execute! Use ExecuteWithPython instead!
@@ -3075,12 +3115,8 @@ type
     procedure Py_Begin_Unblock_Threads;
 
   public
-    property InterpreterState: PPyInterpreterState read  fInterpreterState
-                                                   write fInterpreterState
-                                                   default nil;
-    property ThreadState: PPyThreadState read  fThreadState
-                                         write fThreadState;
-    property ThreadExecMode: TThreadExecMode read fThreadExecMode;
+    property ThreadState : PPyThreadState read  fThreadState;
+    property ThreadExecMode: TThreadExecMode read fThreadExecMode write fThreadExecMode;
   end;
 {$HINTS ON}
 
@@ -3118,6 +3154,7 @@ procedure PyObjectDestructor( pSelf : PPyObject); cdecl;
 procedure FreeSubtypeInst(ob:PPyObject); cdecl;
 procedure Register;
 function  PyType_HasFeature(AType : PPyTypeObject; AFlag : Integer) : Boolean;
+function GetPythonVersionFromDLLName(const DLLFileName : String): String;
 
 { Helper functions}
 (*
@@ -3134,6 +3171,11 @@ function IsPythonVersionRegistered(PythonVersion : string;
 *)
 procedure MaskFPUExceptions(ExceptionsMasked : boolean;
   MatchPythonPrecision : Boolean = True);
+(*
+  Converts line breaks to LF and optionally adds a line break at the end
+*)
+function CleanString(const s : AnsiString; AppendLF : Boolean = True) : AnsiString; overload;
+function CleanString(const s : string; AppendLF : Boolean = True) : string; overload;
 
 //#######################################################
 //##                                                   ##
@@ -3144,8 +3186,15 @@ procedure MaskFPUExceptions(ExceptionsMasked : boolean;
 
 implementation
 
+uses
+{$IFDEF FPC}
+  StrUtils,
+{$ELSE}
+  AnsiStrings,
+{$ENDIF}
 {$IFDEF MSWINDOWS}
-uses Registry;
+  Math,
+  Registry;
 {$ENDIF}
 
 
@@ -3580,13 +3629,23 @@ begin
   if (fMajorVersion > 3) or ((fMajorVersion = 3) and (fMinorVersion >= 3)) then
     Result := ''
   else if APIVersion >= 1011 then
-    Result := 'UCS2'
+    Result :=
+      {$IF DEFINED(MSWINDOWS) or DEFINED(DARWIN) or DEFINED(SOLARIS)}
+        'UCS2'
+      {$ELSE}
+        'UCS4'
+      {$ENDIF}
   else
     Result := '';
 end;
 
 procedure TPythonInterface.MapDll;
+Var
+  UnicodeSuffix : string;
+
 begin
+  UnicodeSuffix := GetUnicodeTypeSuffix;
+
   Py_DebugFlag               := Import('Py_DebugFlag');
   Py_VerboseFlag             := Import('Py_VerboseFlag');
   Py_InteractiveFlag         := Import('Py_InteractiveFlag');
@@ -3784,10 +3843,13 @@ begin
   PyRun_String              := Import('PyRun_String');
   PyRun_SimpleString        := Import('PyRun_SimpleString');
   PyDict_GetItemString      := Import('PyDict_GetItemString');
-  if not IsPython3000 then
-    PyString_AsString         := Import('PyString_AsString')
-  else
+  if not IsPython3000 then begin
+    PyString_AsString         := Import('PyString_AsString');
+    PyString_AsStringAndSize  := Import('PyString_AsStringAndSize')
+  end else begin
     PyString_AsString         := Import('PyBytes_AsString');
+    PyString_AsStringAndSize  := Import('PyBytes_AsStringAndSize');
+  end;
   if not IsPython3000 then
     DLL_PyString_FromString   := Import('PyString_FromString');
   if not IsPython3000 then
@@ -3909,7 +3971,6 @@ begin
   PyOS_InterruptOccurred    :=Import('PyOS_InterruptOccurred');
   PyObject_CallObject       :=Import('PyObject_CallObject');
   PyObject_CallMethod       :=Import('PyObject_CallMethod');
-  PyObject_CallMethodStr    :=Import('PyObject_CallMethod');
   if not IsPython3000 then
     PyObject_Compare          :=Import('PyObject_Compare');
   PyObject_RichCompare      :=Import('PyObject_RichCompare');
@@ -3996,12 +4057,12 @@ begin
   PyType_GenericAlloc       :=Import('PyType_GenericAlloc');
   PyType_GenericNew         :=Import('PyType_GenericNew');
   PyType_Ready              :=Import('PyType_Ready');
-  PyUnicode_FromWideChar    :=Import(AnsiString(Format('PyUnicode%s_FromWideChar',[GetUnicodeTypeSuffix])));
-  PyUnicode_AsWideChar      :=Import(AnsiString(Format('PyUnicode%s_AsWideChar',[GetUnicodeTypeSuffix])));
-  PyUnicode_Decode          :=Import(AnsiString(Format('PyUnicode%s_Decode',[GetUnicodeTypeSuffix])));
-  PyUnicode_AsEncodedString :=Import(AnsiString(Format('PyUnicode%s_AsEncodedString',[GetUnicodeTypeSuffix])));
-  PyUnicode_FromOrdinal     :=Import(AnsiString(Format('PyUnicode%s_FromOrdinal',[GetUnicodeTypeSuffix])));
-  PyUnicode_GetSize         :=Import(AnsiString(Format('PyUnicode%s_GetSize',[GetUnicodeTypeSuffix])));
+  PyUnicode_FromWideChar    :=Import(AnsiString(Format('PyUnicode%s_FromWideChar',[UnicodeSuffix])));
+  PyUnicode_AsWideChar      :=Import(AnsiString(Format('PyUnicode%s_AsWideChar',[UnicodeSuffix])));
+  PyUnicode_Decode          :=Import(AnsiString(Format('PyUnicode%s_Decode',[UnicodeSuffix])));
+  PyUnicode_AsEncodedString :=Import(AnsiString(Format('PyUnicode%s_AsEncodedString',[UnicodeSuffix])));
+  PyUnicode_FromOrdinal     :=Import(AnsiString(Format('PyUnicode%s_FromOrdinal',[UnicodeSuffix])));
+  PyUnicode_GetSize         :=Import(AnsiString(Format('PyUnicode%s_GetSize',[UnicodeSuffix])));
   PyWeakref_GetObject       :=Import('PyWeakref_GetObject');
   PyWeakref_NewProxy        :=Import('PyWeakref_NewProxy');
   PyWeakref_NewRef          :=Import('PyWeakref_NewRef');
@@ -4010,18 +4071,18 @@ begin
   PyThreadState_SetAsyncExc :=Import('PyThreadState_SetAsyncExc');
   Py_AtExit                 :=Import('Py_AtExit');
   //Py_Cleanup                :=Import('Py_Cleanup');
-  Py_CompileString          :=Import('Py_CompileString');
   Py_FatalError             :=Import('Py_FatalError');
   if not IsPython3000 then begin
-    Py_FindMethod             :=Import('Py_FindMethod');
-    Py_FindMethodInChain      :=Import('Py_FindMethodInChain');
+    Py_FindMethod           :=Import('Py_FindMethod');
+    Py_FindMethodInChain    :=Import('Py_FindMethodInChain');
     DLL_Py_FlushLine        :=Import('Py_FlushLine');
+    _PyString_Resize        :=Import('_PyString_Resize');
+    Py_CompileStringFlags   :=Import('Py_CompileStringFlags');
+  end else begin
+    _PyString_Resize        :=Import('_PyBytes_Resize');
+    Py_CompileStringExFlags :=Import('Py_CompileStringExFlags');
   end;
-  _PyObject_New             :=Import('_PyObject_New');
-  if not IsPython3000 then
-    _PyString_Resize          :=Import('_PyString_Resize')
-  else
-    _PyString_Resize          :=Import('_PyBytes_Resize');
+  _PyObject_New               :=Import('_PyObject_New');
   Py_Finalize                :=Import('Py_Finalize');
   if getProcAddress( FDLLHandle, 'PyCode_Addr2Line' ) <> nil then
     DLL_PyCode_Addr2Line     := Import('PyCode_Addr2Line');
@@ -4035,17 +4096,20 @@ begin
   Py_GetCopyright            :=Import('Py_GetCopyright');
   Py_GetExecPrefix           :=Import('Py_GetExecPrefix');
   Py_GetPath                 :=Import('Py_GetPath');
+  if IsPython3000 then
+    Py_SetPythonHome3000     :=Import('Py_SetPythonHome')
+  else
+    Py_SetPythonHome         :=Import('Py_SetPythonHome');
+  if IsPython3000 then
+    Py_GetPythonHome3000     :=Import('Py_GetPythonHome')
+  else
+    Py_GetPythonHome         :=Import('Py_GetPythonHome');
   Py_GetPrefix               :=Import('Py_GetPrefix');
   Py_GetProgramName          :=Import('Py_GetProgramName');
-  PyParser_SimpleParseString :=Import('PyParser_SimpleParseString');
+  PyParser_SimpleParseStringFlags := Import('PyParser_SimpleParseStringFlags');
   PyNode_Free                :=Import('PyNode_Free');
   PyErr_NewException         :=Import('PyErr_NewException');
-/// jah 29-sep-2000 : updated for python 2.0
-///                   replaced Py_Malloc with PyMem_Malloc
-///---   @Py_Malloc := Import ('Py_Malloc');
-///+++   @Py_Malloc := Import ('PyMem_Malloc');
   try
-    Py_Malloc := Import ('PyMem_Malloc');
     PyMem_Malloc := Import ('PyMem_Malloc');
   except
   end;
@@ -4076,6 +4140,19 @@ begin
   PyGILState_Release       := Import('PyGILState_Release');
 end;
 
+function TPythonInterface.Py_CompileString( s1,s2:PAnsiChar;i:integer):PPyObject; cdecl;
+begin
+  if IsPython3000 then
+    Result := Py_CompileStringExFlags(s1, s2, i, nil, -1)
+  else
+    Result := Py_CompileStringFlags(s1, s2, i, nil);
+end;
+
+function TPythonInterface.PyParser_SimpleParseString( str : PAnsiChar; start : integer) : PNode; cdecl;
+begin
+  Result := PyParser_SimpleParseStringFlags(str, start, 0);
+end;
+
 procedure TPythonInterface.Py_INCREF(op: PPyObject);
 begin
   Inc(op^.ob_refcnt);
@@ -4099,11 +4176,6 @@ end;
 procedure TPythonInterface.Py_XDECREF(op: PPyObject);
 begin
   if op <> nil then Py_DECREF(op);
-end;
-
-function TPythonInterface.Py_GetPlatform: PAnsiChar; cdecl;
-begin
-  Py_GetPlatform := 'win32';
 end;
 
 // This function is copied from compile.c because it was not
@@ -4713,7 +4785,9 @@ begin
       end;
       if not PYTHON_KNOWN_VERSIONS[i].CanUseLatest then
         Break;
-    end;
+    end
+  else
+    RegVersion := GetPythonVersionFromDLLName(aDllName);
   inherited;
 end;
 
@@ -4750,7 +4824,19 @@ procedure TPythonEngine.Initialize;
   procedure InitSysPath;
   var
     _path : PPyObject;
+  const Script =
+    'import sys' + sLineBreak +
+    'sys.executable = r"%s"' + sLineBreak +
+    'path = sys.path' + sLineBreak +
+    'for i in range(len(path)-1, -1, -1):' + sLineBreak +
+    '    if path[i].find("site-packages") > 0:' + sLineBreak +
+    '        path.pop(i)' + sLineBreak +
+    'import site' + sLineBreak +
+    'site.main()' + sLineBreak +
+    'del sys, path, i, site';
   begin
+     if VenvPythonExe <> '' then
+       ExecString(AnsiString(Format(Script, [VenvPythonExe])));
     _path := PySys_GetObject('path');
     if Assigned(FOnSysPathInit) then
       FOnSysPathInit(Self, _path);
@@ -4823,17 +4909,25 @@ begin
   if IsPython3000 then begin
     if Assigned(Py_SetProgramName3000) then
     begin
-      FProgramNameW := ParamStr(0);
+      if FProgramNameW = '' then
+        FProgramNameW := ParamStr(0);
       Py_SetProgramName3000(PWideChar(FProgramNameW));
     end
   end else begin
     if Assigned(Py_SetProgramName) then
     begin
-      FProgramName := AnsiString(ParamStr(0));
+      if FProgramName = '' then
+        FProgramName := AnsiString(ParamStr(0));
       Py_SetProgramName(PAnsiChar(FProgramName));
     end
   end;
   AssignPyFlags;
+  if FPythonHomeW <> '' then begin
+    if IsPython3000 then
+      Py_SetPythonHome3000(PWideChar(FPythonHomeW))
+    else
+      Py_SetPythonHome(PAnsiChar(FPythonHome));
+  end;
   Py_Initialize;
   FInitialized := True;
   FIORedirected := False;
@@ -4865,8 +4959,11 @@ var
   res: PPyThreadState;
 begin
   if Assigned(PyThreadState_Get) then begin
-    res:= PyThreadState_Get;
-    Result := res^.interp;
+    res:= PyThreadState_Get();
+    if (MajorVersion > 3) or ((MajorVersion = 3) and (MinorVersion >= 4)) then
+      Result := res^.interp34
+    else
+      Result := res^.interp;
   end else
     Result := nil;
 end;
@@ -5088,6 +5185,18 @@ begin
   end; // of if
 end;
 
+procedure TPythonEngine.SetPythonHome(const PythonHome: string);
+begin
+  FPythonHomeW := PythonHome;
+  FPythonHome := EncodeString(PythonHome);
+end;
+
+procedure TPythonEngine.SetProgramName(const ProgramName: string);
+begin
+  FProgramNameW := ProgramName;
+  FProgramName := EncodeString(ProgramName);
+end;
+
 function TPythonEngine.IsType(ob: PPyObject; obt: PPyTypeObject): Boolean;
 begin
   result := ob^.ob_type = obt;
@@ -5105,23 +5214,6 @@ begin
     Py_XDECREF(attr);
   end;
   PyErr_Clear;
-end;
-
-function TPythonEngine.CleanString(const s : AnsiString) : AnsiString;
-var
-  i : Integer;
-begin
-  result := s;
-  if s = '' then
-    Exit;
-  i := Pos(AnsiString(CR),s);
-  while i > 0 do
-    begin
-      Delete( result, i, 1 );
-      i := Pos(AnsiString(CR),result);
-    end;
-  if result[length(result)] <> LF then
-    Insert( LF, result, length(result)+1 );
 end;
 
 function   TPythonEngine.EvalPyFunction(pyfunc, pyargs:PPyObject): Variant;
@@ -5257,12 +5349,12 @@ end;
 
 procedure TPythonEngine.ExecStrings( strings : TStrings );
 begin
-  Py_XDecRef( Run_CommandAsObject( CleanString( AnsiString(strings.Text) ), file_input ) );
+  Py_XDecRef( Run_CommandAsObject( EncodeString(strings.Text) , file_input ) );
 end;
 
 function TPythonEngine.EvalStrings( strings : TStrings ) : PPyObject;
 begin
-  Result := Run_CommandAsObject( CleanString( AnsiString(strings.Text) ), eval_input );
+  Result := Run_CommandAsObject( EncodeString(strings.Text) , eval_input );
 end;
 
 procedure TPythonEngine.ExecString(const command : AnsiString; locals, globals : PPyObject );
@@ -5272,7 +5364,7 @@ end;
 
 procedure TPythonEngine.ExecStrings( strings : TStrings; locals, globals : PPyObject );
 begin
-  Py_XDecRef( Run_CommandAsObjectWithDict( CleanString( AnsiString(strings.Text) ), file_input, locals, globals ) );
+  Py_XDecRef( Run_CommandAsObjectWithDict( EncodeString(strings.Text), file_input, locals, globals ) );
 end;
 
 function TPythonEngine.EvalString( const command : AnsiString; locals, globals : PPyObject ) : PPyObject;
@@ -5282,12 +5374,12 @@ end;
 
 function TPythonEngine.EvalStrings( strings : TStrings; locals, globals : PPyObject ) : PPyObject;
 begin
-  Result := Run_CommandAsObjectWithDict( CleanString( AnsiString(strings.Text) ), eval_input, locals, globals );
+  Result := Run_CommandAsObjectWithDict( EncodeString(strings.Text), eval_input, locals, globals );
 end;
 
 function TPythonEngine.EvalStringsAsStr( strings : TStrings ) : String;
 begin
-  Result := Run_CommandAsString( CleanString( AnsiString(strings.Text) ), eval_input );
+  Result := Run_CommandAsString( EncodeString(strings.Text), eval_input );
 end;
 
 function TPythonEngine.CheckEvalSyntax( const str : AnsiString ) : Boolean;
@@ -5635,6 +5727,23 @@ begin
         end;
 end;
 
+function TPythonEngine.EncodeString(const str: string): AnsiString;
+begin
+  if IsPython3000 then
+    Result := UTF8Encode(str)
+  else
+    Result := AnsiString(str);
+end;
+
+function TPythonEngine.EncodeWindowsFilePath(const str: string): AnsiString;
+{PEP 529}
+begin
+  if (MajorVersion > 3) or ((MajorVersion = 3) and (MinorVersion >=6) )then
+    Result := UTF8Encode(str)
+  else
+    Result := AnsiString(str);
+end;
+
 function   TPythonEngine.TypeByName( const aTypeName : AnsiString ) : PPyTypeObject;
 var
   i : Integer;
@@ -5733,7 +5842,7 @@ Var
         for j := VarArrayLowBound( DeRefV, 2 ) to VarArrayHighBound( DeRefV, 2 ) do
           begin
             L2 := PyList_New( VarArrayHighBound( DeRefV, 3 ) - VarArrayLowBound( DeRefV, 3 ) + 1 );
-            PyList_SetItem( Result, cpt2, L );
+            PyList_SetItem( L, cpt2, L2 );
             cpt3 := 0;
             for k := VarArrayLowBound( DeRefV, 3 ) to VarArrayHighBound( DeRefV, 3 ) do
               begin
@@ -6045,8 +6154,6 @@ begin
 end;
 
 function TPythonEngine.VarRecAsPyObject( v : TVarRec ) : PPyObject;
-var
-  buff : array [0..256] of AnsiChar;
 begin
   case v.VType of
     vtInteger:       Result := PyInt_FromLong( v.VInteger );
@@ -6056,7 +6163,7 @@ begin
     vtString:
     begin
       if Assigned(v.VString) then
-        Result := PyString_FromString( StrPCopy( buff, v.VString^) )
+        Result := PyString_FromString(PAnsiChar(AnsiString(v.VString^)))
       else
         Result := PyString_FromString( '' );
     end;
@@ -6182,7 +6289,7 @@ function TPythonEngine.ArrayToPyDict( items : array of const) : PPyObject;
       vtAnsiString:
         begin
           if Assigned(v.VAnsiString) then
-            Result := StrPas(PAnsiChar(Ansistring(v.VAnsiString)))
+            Result := Ansistring(v.VAnsiString)
           else
             Result := '';
         end;
@@ -6251,7 +6358,7 @@ begin
     raise EPythonError.Create('Could not create a new list object');
   for i := 0 to strings.Count - 1 do
     PyList_SetItem( Result, i,
-      PyString_FromString( PAnsiChar(AnsiString(strings.Strings[i])) ) );
+      PyString_FromDelphiString( strings.Strings[i]) );
 end;
 
 function TPythonEngine.StringsToPyTuple( strings : TStrings ) : PPyObject;
@@ -6263,7 +6370,7 @@ begin
     raise EPythonError.Create('Could not create a new tuple object');
   for i := 0 to strings.Count - 1 do
     PyTuple_SetItem( Result, i,
-      PyString_FromString( PAnsiChar(AnsiString(strings.Strings[i])) ) );
+      PyString_FromDelphiString( strings.Strings[i]) );
 end;
 
 procedure TPythonEngine.PyListToStrings( list : PPyObject; strings : TStrings );
@@ -6331,7 +6438,7 @@ begin
 {$IFDEF LINUX}
   // Note that Linux uses UCS4 strings, whereas it declares using UCS2 strings!!!
   _ucs4Str := WideStringToUCS4String(AString);
-  Result := PyUnicode_FromWideChar( {PWideChar}(@_ucs4Str[0]), Length(AString) );
+  Result := PyUnicode_FromWideChar( {PWideChar}(@_ucs4Str[0]), Length(_ucs4Str)-1 {trim trailing zero});
 {$ELSE}
   Result := PyUnicode_FromWideChar( PWideChar(AString), Length(AString) );
 {$ENDIF}
@@ -6510,16 +6617,6 @@ begin
   Result := Assigned(FPyDateTime_DateType) and (Pointer(obj^.ob_type) = FPyDateTime_TZInfoType);
 end;
 
-function TPythonEngine.GetVersion: String;
-begin
-  Result := '3.32';
-end;
-
-procedure TPythonEngine.SetVersion(const Value: String);
-begin
-  // do nothing
-end;
-
 function TPythonEngine.PyString_AsDelphiString(ob: PPyObject): string;
 begin
   if PyUnicode_Check(ob) then
@@ -6542,6 +6639,16 @@ begin
     Result := PyUnicode_AsWideString(ob)
   else
     Result := UnicodeString(PyString_AsString(ob));
+end;
+
+function TPythonEngine.PyString_FromDelphiString(str: string): PPyObject;
+begin
+  if IsPython3000 then
+  begin
+    Result := PyUnicode_FromWideString(str);
+  end
+  else
+    Result := DLL_PyString_FromString(PAnsiChar(AnsiString(str)));
 end;
 
 function TPythonEngine.PyString_FromString( str: PAnsiChar): PPyObject;
@@ -6679,7 +6786,8 @@ end;
 function TEventDef.GetDocString : AnsiString;
 begin
   Owner.Container.CheckEngine;
-  FTmpDocString := Owner.Container.Engine.CleanString(AnsiString(FDocString.Text));
+  FTmpDocString :=
+    Owner.Container.Engine.EncodeString(CleanString(FDocString.Text, False));
   Result := fTmpDocString;
 end;
 
@@ -7454,7 +7562,8 @@ begin
     begin
       if DocString.Text <> '' then
         begin
-          doc := PyString_FromString( PAnsiChar(CleanString(AnsiString(FDocString.Text))) );
+          doc :=
+            PyString_FromDelphiString(CleanString(FDocString.Text, False));
           PyObject_SetAttrString( FModule, '__doc__', doc );
           Py_XDecRef(doc);
           CheckError(False);
@@ -7777,15 +7886,6 @@ begin
       finally
         Py_XDecRef(PyKey);
       end;
-
-//      // check for a method
-//      if IsPython3000 then
-//        // I think Python 3000 from beta 2 gets the methods from the tp_methods field
-//        Result := nil
-//      else
-//        Result := Py_FindMethod( PythonType.MethodsData, GetSelf, key);
-//      if not Assigned(Result) then
-//        PyErr_SetString (PyExc_AttributeError^, PAnsiChar(Format('Unknown attribute "%s"',[key])));
     end;
 end;
 
@@ -7801,9 +7901,9 @@ end;
 
 function  TPyObject.Repr : PPyObject;
 begin
-  with GetPythonEngine do
-    Result :=
-      PyString_FromString( PAnsiChar(AnsiString(Format('<%s at %x>', [PythonType.TypeName, NativeInt(self)]))) );
+  Result :=
+    GetPythonEngine.PyString_FromDelphiString( Format('<%s at %x>',
+        [PythonType.TypeName, NativeInt(self)]) );
 end;
 
 function  TPyObject.Compare( obj: PPyObject) : Integer;
@@ -7847,8 +7947,23 @@ begin
 end;
 
 function  TPyObject.RichCompare( obj : PPyObject; Op : TRichComparisonOpcode) : PPyObject;
+Var
+  Res : Boolean;
 begin
-  Result := nil;
+  Res := False;
+  case Op of
+    pyLT: Res := Compare(obj) < 0;
+    pyLE: Res := Compare(obj) <= 0;
+    pyEQ: Res := Compare(obj) = 0;
+    pyNE: Res := Compare(obj) <> 0;
+    pyGT: Res := Compare(obj) > 0;
+    pyGE: Res := Compare(obj) >= 0;
+  end;
+  if Res then
+    Result := PPyObject(GetPythonEngine.Py_True)
+  else
+    Result := PPyObject(GetPythonEngine.Py_False);
+  GetPythonEngine.Py_INCREF( Result );
 end;
 
 function  TPyObject.Iter : PPyObject;
@@ -8710,8 +8825,9 @@ begin
     begin
       // Basic services
       if FDocString.Count > 0 then
+        with Engine do
         begin
-          FCurrentDocString := GetPythonEngine.CleanString(AnsiString(FDocString.Text));
+          FCurrentDocString := EncodeString(CleanString(FDocString.Text, False));
           tp_doc := PAnsiChar(FCurrentDocString);
         end;
       tp_dealloc   := @PyObjectDestructor;
@@ -9290,8 +9406,8 @@ begin
       obj := GetValue;
       try
         Result :=
-          PyString_FromString( PAnsiChar(AnsiString(Format('<%s: %s>',
-            [PythonType.TypeName, PyObjectAsString(obj)]))) );
+          PyString_FromDelphiString( Format('<%s: %s>',
+            [PythonType.TypeName, PyObjectAsString(obj)]) );
       finally
         Py_XDecRef(obj);
       end;
@@ -9404,29 +9520,22 @@ end;
 
 procedure TPythonThread.Execute;
 var
-  withinterp: Boolean;
   global_state : PPyThreadState;
   gilstate : PyGILState_STATE;
 begin
-  withinterp := Assigned( fInterpreterState);
   with GetPythonEngine do
   begin
-    if withinterp then
+    if fThreadExecMode = emNewState then
     begin
-      fThreadExecMode := emNewState;
-      fThreadState := PyThreadState_New( fInterpreterState);
-      if Assigned(fThreadState) then
-      begin
-        PyEval_AcquireThread(fThreadState);
+      gilstate := PyGILState_Ensure();
+      try
+        fThreadState := GetThreadState;
         ExecuteWithPython;
-        PyEval_ReleaseThread( fThreadState);
-        PyThreadState_Clear(  fThreadState);
-        PyThreadState_Delete( fThreadState);
-      end else
-        raise EPythonError.Create( 'Could not create a new thread state');
-    end else {withinterp}
+      finally
+        PyGILState_Release(gilstate);
+      end;
+    end else {fThreadExecMode}
     begin
-      fThreadExecMode := emNewInterpreter;
       gilstate := PyGILState_Ensure();
       global_state := PyThreadState_Get;
       PyThreadState_Swap(nil);
@@ -9488,7 +9597,7 @@ begin
   if GetCurrentThreadId <> MainThreadId then
     with GetPythonEngine do
       begin
-        if RedirectIO and (IO <> nil) and (IO.ClassName <> 'TPythonInputOutput') then
+        if RedirectIO and (IO <> nil) and (IO.ClassName <> 'TPythonInputOutput') and not IO.DelayWrites then
           begin
             Result := GetPythonEngine.ReturnNone;
             Exit;
@@ -9531,19 +9640,15 @@ begin
           if Assigned(IO) then
             if IO.UnicodeIO then begin
               Widetxt := IO.ReceiveUniData;
-              // KV!!!!!!
               if PyErr_Occurred <> nil then
                 Result := nil
               else
-              // KV!!!!!!
                 Result := PyUnicode_FromWideString(PWideChar(Widetxt));
             end else begin
               txt := IO.ReceiveData;
-              // KV!!!!!!
               if PyErr_Occurred <> nil then
                 Result := nil
               else
-              // KV!!!!!!
                 Result := PyString_FromString(PAnsiChar(txt));
             end
           else
@@ -9711,6 +9816,11 @@ begin
                                 TPythonType, TPythonModule, TPythonDelphiVar]);
 end;
 
+function GetPythonVersionFromDLLName(const DLLFileName : String): String;
+begin
+  Result := DLLFileName[{$IFDEF MSWINDOWS}7{$ELSE}10{$ENDIF}] + '.' + DLLFileName[{$IFDEF MSWINDOWS}8{$ELSE}11{$ENDIF}];
+end;
+
 function PyType_HasFeature(AType : PPyTypeObject; AFlag : Integer) : Boolean;
 begin
   //(((t)->tp_flags & (f)) != 0)
@@ -9720,19 +9830,41 @@ end;
 procedure MaskFPUExceptions(ExceptionsMasked : boolean;
   MatchPythonPrecision : Boolean);
 begin
-  {$IFNDEF CPUARM}
-  if MatchPythonPrecision then begin
-    if ExceptionsMasked then
-      Set8087CW($1232 or $3F)
+  if ExceptionsMasked then
+    SetExceptionMask([exInvalidOp, exDenormalized, exZeroDivide,
+      exOverflow, exUnderflow, exPrecision])
+  else
+    SetExceptionMask([exDenormalized, exUnderflow, exPrecision]);
+{$IFNDEF NEXTGEN}{$WARN SYMBOL_PLATFORM OFF}
+  if MatchPythonPrecision then
+      SetPrecisionMode(pmDouble)
     else
-      Set8087CW($1232);
-  end else begin
-    if ExceptionsMasked then
-      Set8087CW($1332 or $3F)
-    else
-      Set8087CW($1332);
-  end;
-  {$ENDIF}
+      SetPrecisionMode(pmExtended);
+{$ENDIF !NEXTGEN}{$WARN SYMBOL_PLATFORM ON}
+end;
+
+function CleanString(const s : AnsiString; AppendLF : Boolean) : AnsiString;
+var
+  i : Integer;
+begin
+  result := s;
+  if s = '' then
+    Exit;
+  i := Pos(AnsiString(CR),s);
+  while i > 0 do
+    begin
+      Delete( result, i, 1 );
+      i := PosEx(AnsiString(CR),result, i);
+    end;
+  if AppendLF and (result[length(result)] <> LF) then
+    Result := Result + LF;
+end;
+
+function CleanString(const s : string; AppendLF : Boolean) : string;
+begin
+  Result := AdjustLineBreaks(s, tlbsLF);
+  if AppendLF and (result[length(result)] <> LF) then
+    Result := Result + LF;
 end;
 
 {$IFDEF MSWINDOWS}
