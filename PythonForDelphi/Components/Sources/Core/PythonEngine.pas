@@ -3175,7 +3175,9 @@ procedure MaskFPUExceptions(ExceptionsMasked : boolean;
   Converts line breaks to LF and optionally adds a line break at the end
 *)
 function CleanString(const s : AnsiString; AppendLF : Boolean = True) : AnsiString; overload;
+{$ifndef FPC}
 function CleanString(const s : string; AppendLF : Boolean = True) : string; overload;
+{$ENDIF}
 
 //#######################################################
 //##                                                   ##
@@ -5971,7 +5973,7 @@ begin
         // detect if the variant supports this special property
         if Assigned(Disp) and (Disp.GetIDsOfNames(GUID_NULL, @wStr, 1, 0, @DispID) = S_OK) then
         begin
-          myInt := DeRefV.__asPPyObject__;  //Returns the address to PPyObject as integer. (See impl. in PythonAtom.pas)
+          myInt := Integer(DeRefV.__asPPyObject__);  //Returns the address to PPyObject as integer. (See impl. in PythonAtom.pas)
           Result := PPyObject(myInt);
           Py_XIncRef(Result);
         end
@@ -9859,14 +9861,14 @@ begin
   if AppendLF and (result[length(result)] <> LF) then
     Result := Result + LF;
 end;
-
+{$ifndef FPC}
 function CleanString(const s : string; AppendLF : Boolean) : string;
 begin
   Result := AdjustLineBreaks(s, tlbsLF);
   if AppendLF and (result[length(result)] <> LF) then
     Result := Result + LF;
 end;
-
+{$endif}
 {$IFDEF MSWINDOWS}
 function IsPythonVersionRegistered(PythonVersion : string;
   out InstallPath: string; out AllUserInstall: Boolean) : Boolean;

@@ -1382,7 +1382,7 @@ begin
       // So: myList[0] won't work, but myObj.MyList[0] will!!!
       if PySequence_Check(_prop) <> 0 then
       begin
-        _result := PySequence_GetItem(_prop, Variant(AArg));
+        _result := PySequence_GetItem(_prop, Integer(Variant(AArg)));
         CheckError;
       end; // of if
     end; // of if
@@ -1472,13 +1472,13 @@ function TPythonVariantType.EvalPython(const V: TVarData;
         if not Assigned(_value) then
           raise Exception.Create(SCantConvertValueToPythonObject);
         if PyList_Check(AObject) then
-          _result := PyList_SetItem( AObject, Variant(AKey), _value )
+          _result := PyList_SetItem( AObject, Integer(Variant(AKey)), _value )
         else if PyTuple_Check(AObject) then
-          _result := PyTuple_SetItem( AObject, Variant(AKey), _value )
+          _result := PyTuple_SetItem( AObject, Integer(Variant(AKey)), _value )
         else
           try
             if PySequence_Check(AObject) <> 0 then
-              _result := PySequence_SetItem(AObject, Variant(AKey), _value)
+              _result := PySequence_SetItem(AObject, Integer(Variant(AKey)), _value)
             else
               _result := PyObject_SetItem( AObject, _key, _value );
           finally

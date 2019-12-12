@@ -331,7 +331,7 @@ interface
 uses
   SysUtils, Classes, PythonEngine,  TypInfo,
   Variants,
-{$IFNDEF FPC}
+  {$IFNDEF FPC}
 {$IFDEF EXTENDED_RTTI}
   Rtti,
 {$ELSE}
@@ -835,7 +835,7 @@ Type
   function  SetToPython(APropInfo: PPropInfo; AValue : Integer) : PPyObject; overload;
   function  SetToPython(AInstance: TObject; APropInfo: PPropInfo) : PPyObject; overload;
   function  PythonToSet(APropInfo: PPropInfo; ASet : PPyObject) : Integer; overload;
-  function  PythonToSet(ATypeInfo: PTypeInfo; ASet : PPyObject) : Integer; overload
+  function  PythonToSet(ATypeInfo: PTypeInfo; ASet : PPyObject) : Integer; overload;
   function  SupportsFreeNotification(AObject : TObject) : Boolean;
   procedure RaiseNotifyEvent(PyDelphiWrapper : TPyDelphiWrapper; ACallable : PPyObject; Sender: TObject);
 
@@ -1246,7 +1246,7 @@ begin
   Result := SetToPython(APropInfo, GetOrdProp(AInstance, APropInfo));
 end;
 
-function  PythonToSet(ATypeInfo: PTypeInfo; ASet : PPyObject) : Integer; overload
+function  PythonToSet(ATypeInfo: PTypeInfo; ASet : PPyObject) : Integer; overload;
 var
   i : Integer;
   EnumObj: PPyObject;
@@ -1777,11 +1777,16 @@ function TPyDelphiObject.GetAttrO(key: PPyObject): PPyObject;
 var
   KeyName: string;
   ErrMsg : string;
+{$ifndef FPC}
 {$IFNDEF EXTENDED_RTTI}
   Info: PMethodInfoHeader;
   PropInfo: PPropInfo;
   Obj : TObject;
 {$ENDIF}
+{$else}
+  PropInfo: PPropInfo;
+  Obj : TObject;
+{$endif}
 begin
   Result := inherited GetAttrO(key);
   if GetPythonEngine.PyErr_Occurred = nil then Exit;  // We found what we wanted
